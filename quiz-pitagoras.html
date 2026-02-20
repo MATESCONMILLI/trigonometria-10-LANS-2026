@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cuestionario · Teorema de Pitágoras · Grado 10°</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1209;
+    --paper: #faf6ee;
+    --gold: #b8860b;
+    --gold-light: #e8c84a;
+    --rust: #8b2500;
+    --sage: #3a5a40;
+    --cream: #f2ead8;
+    --line: #c8b87a;
+    --correct: #2d6a4f;
+    --wrong: #9b2226;
+    --timer-ok: #3a5a40;
+    --timer-warn: #b8860b;
+    --timer-danger: #9b2226;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(200,184,122,0.18) 28px),
+      radial-gradient(ellipse at 10% 0%, rgba(184,134,11,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse at 90% 100%, rgba(139,37,0,0.05) 0%, transparent 60%);
+  }
+
+  /* ── COVER ── */
+  #cover {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 60px 40px 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+  .logo-header {
+    width: 100%;
+    border-top: 3px double var(--gold);
+    border-bottom: 3px double var(--gold);
+    padding: 14px 0;
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  .logo-header small {
+    font-family: 'Source Serif 4', serif;
+    font-weight: 300;
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .main-title {
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-weight: 900;
+    font-size: clamp(2rem, 6vw, 3.4rem);
+    line-height: 1.1;
+    text-align: center;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .subtitle {
+    font-family: 'Source Serif 4', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--gold);
+    margin-bottom: 40px;
+    letter-spacing: 0.04em;
+  }
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--line), transparent);
+    margin: 16px 0;
+  }
+  .form-card {
+    width: 100%;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 36px 40px;
+    box-shadow: 4px 4px 0 rgba(184,134,11,0.12);
+  }
+  .form-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 24px;
+    border-left: 3px solid var(--rust);
+    padding-left: 12px;
+  }
+  .field {
+    margin-bottom: 20px;
+  }
+  .field label {
+    display: block;
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .field input, .field select {
+    width: 100%;
+    background: var(--paper);
+    border: none;
+    border-bottom: 2px solid var(--line);
+    padding: 10px 4px;
+    font-family: 'Source Serif 4', serif;
+    font-size: 1rem;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .field input:focus, .field select:focus { border-bottom-color: var(--gold); }
+  .field select { appearance: none; cursor: pointer; }
+  .info-box {
+    background: var(--paper);
+    border-left: 3px solid var(--gold);
+    padding: 14px 18px;
+    margin-top: 8px;
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: #4a3c1a;
+  }
+  .info-box strong { color: var(--ink); }
+  .start-btn {
+    width: 100%;
+    margin-top: 28px;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 16px 32px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .start-btn:hover { background: var(--rust); transform: translateY(-1px); }
+  .start-btn:active { transform: translateY(0); }
+  .teacher-sig {
+    margin-top: 32px;
+    font-style: italic;
+    font-size: 0.82rem;
+    color: #7a6a3a;
+    text-align: center;
+  }
+
+  /* ── QUIZ ── */
+  #quiz { display: none; max-width: 760px; margin: 0 auto; padding: 30px 24px 60px; }
+
+  .progress-bar-wrap {
+    width: 100%;
+    height: 4px;
+    background: rgba(200,184,122,0.3);
+    margin-bottom: 30px;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    transition: width 0.4s ease;
+    border-radius: 2px;
+  }
+  .q-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 18px;
+  }
+  .q-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .q-type-badge {
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    padding: 3px 10px;
+    color: #7a6a3a;
+  }
+
+  /* Timer */
+  .timer-ring-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .timer-svg { width: 48px; height: 48px; }
+  .timer-circle-bg { fill: none; stroke: rgba(200,184,122,0.25); stroke-width: 4; }
+  .timer-circle-fg {
+    fill: none;
+    stroke: var(--timer-ok);
+    stroke-width: 4;
+    stroke-linecap: round;
+    transform-origin: center;
+    transform: rotate(-90deg);
+    transition: stroke-dashoffset 1s linear, stroke 0.3s;
+    stroke-dasharray: 113.1;
+    stroke-dashoffset: 0;
+  }
+  .timer-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    min-width: 36px;
+    text-align: right;
+    transition: color 0.3s;
+  }
+
+  .q-card {
+    background: var(--cream);
+    border: 1px solid var(--line);
+    padding: 32px 36px 28px;
+    box-shadow: 3px 3px 0 rgba(184,134,11,0.1);
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .q-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: var(--gold);
+  }
+
+  .q-section-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--rust);
+    font-weight: 600;
+    margin-bottom: 10px;
+    margin-left: 0;
+  }
+
+  .q-text {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    margin-bottom: 22px;
+    color: var(--ink);
+  }
+  .q-text .math {
+    font-style: italic;
+    font-size: 1.05em;
+    color: var(--rust);
+  }
+  .q-figure {
+    display: flex;
+    justify-content: center;
+    margin: 16px 0 22px;
+  }
+  .q-figure svg { max-width: 240px; }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .option-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    padding: 12px 18px;
+    cursor: pointer;
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.97rem;
+    color: var(--ink);
+    text-align: left;
+    transition: border-color 0.15s, background 0.15s, transform 0.1s;
+  }
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--gold);
+    background: #fdf8ef;
+    transform: translateX(3px);
+  }
+  .option-btn:disabled { cursor: default; }
+  .option-btn .opt-letter {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    width: 24px;
+    height: 24px;
+    border: 1.5px solid var(--line);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .option-btn.correct { background: #e8f5ee; border-color: var(--correct); }
+  .option-btn.correct .opt-letter { background: var(--correct); border-color: var(--correct); color: #fff; }
+  .option-btn.wrong { background: #fdecea; border-color: var(--wrong); }
+  .option-btn.wrong .opt-letter { background: var(--wrong); border-color: var(--wrong); color: #fff; }
+  .option-btn.missed { border-color: var(--correct); }
+  .option-btn.missed .opt-letter { border-color: var(--correct); color: var(--correct); }
+
+  .feedback-box {
+    margin-top: 16px;
+    padding: 14px 18px;
+    border-left: 3px solid;
+    font-size: 0.9rem;
+    line-height: 1.65;
+    display: none;
+    animation: fadeSlide 0.3s ease;
+  }
+  @keyframes fadeSlide { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:none; } }
+  .feedback-box.correct { border-color: var(--correct); background: #e8f5ee; color: #1b4332; }
+  .feedback-box.wrong { border-color: var(--wrong); background: #fdecea; color: #6b1c1c; }
+
+  .next-btn {
+    display: none;
+    margin-top: 22px;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 12px 32px;
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .next-btn:hover { background: var(--rust); }
+
+  /* ── RESULTS ── */
+  #results { display: none; max-width: 700px; margin: 0 auto; padding: 50px 30px 70px; }
+  .result-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .result-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    margin-bottom: 8px;
+  }
+  .result-header p { font-style: italic; color: #7a6a3a; }
+  .score-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    padding: 32px 40px;
+    margin-bottom: 30px;
+    box-shadow: 4px 4px 0 rgba(184,134,11,0.12);
+  }
+  .score-main {
+    text-align: center;
+  }
+  .score-note {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    font-weight: 900;
+    line-height: 1;
+    color: var(--ink);
+  }
+  .score-note.approved { color: var(--sage); }
+  .score-note.failed { color: var(--rust); }
+  .score-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-top: 6px;
+  }
+  .score-details { font-size: 0.9rem; line-height: 1.8; color: #4a3c1a; }
+  .score-details strong { color: var(--ink); }
+
+  .review-list { margin-bottom: 30px; }
+  .review-item {
+    border: 1px solid var(--line);
+    padding: 14px 18px;
+    margin-bottom: 8px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    background: var(--cream);
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+  .review-icon { font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+  .review-text { color: var(--ink); }
+  .review-text span { font-style: italic; color: #7a6a3a; }
+
+  .export-area {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    padding: 20px 24px;
+    margin-bottom: 20px;
+  }
+  .export-area h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    margin-bottom: 12px;
+    color: var(--rust);
+  }
+  .export-area p { font-size: 0.85rem; color: #6a5a2a; margin-bottom: 14px; line-height: 1.6; }
+  .copy-btn {
+    background: var(--gold);
+    color: var(--ink);
+    border: none;
+    padding: 10px 22px;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background 0.2s;
+  }
+  .copy-btn:hover { background: var(--gold-light); }
+  #csv-output {
+    width: 100%;
+    margin-top: 14px;
+    font-family: monospace;
+    font-size: 0.78rem;
+    background: #fff;
+    border: 1px solid var(--line);
+    padding: 10px;
+    resize: vertical;
+    min-height: 80px;
+    color: var(--ink);
+    display: none;
+  }
+
+  .footer-sig {
+    text-align: center;
+    font-style: italic;
+    font-size: 0.8rem;
+    color: #9a8a5a;
+    margin-top: 30px;
+    border-top: 1px solid var(--line);
+    padding-top: 20px;
+  }
+
+  @media(max-width:600px){
+    .form-card { padding: 24px 20px; }
+    .q-card { padding: 22px 18px 18px; }
+    .score-display { flex-direction: column; gap: 20px; text-align: center; }
+  }
+</style>
+<!-- MathJax for rendering math expressions -->
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'], ['\\(','\\)']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+<!-- ══════════════════════ COVER ══════════════════════ -->
+<div id="cover">
+  <div class="logo-header">
+    <small>Matemáticas · Grado 10° · Trigonometría</small>
+  </div>
+  <h1 class="main-title">Teorema de Pitágoras</h1>
+  <p class="subtitle">Cuestionario de opción múltiple · 10 preguntas</p>
+  <div class="divider"></div>
+
+  <div class="form-card">
+    <h2>Datos del estudiante</h2>
+    <div class="field">
+      <label>Nombre completo</label>
+      <input type="text" id="inp-name" placeholder="Escribe tu nombre y apellidos" autocomplete="off">
+    </div>
+    <div class="field">
+      <label>Grado</label>
+      <select id="inp-grade">
+        <option value="">— Selecciona tu grado —</option>
+        <option value="10A">10° A</option>
+        <option value="10B">10° B</option>
+        <option value="10C">10° C</option>
+        <option value="10D">10° D</option>
+        <option value="10E">10° E</option>
+      </select>
+    </div>
+    <div class="info-box">
+      <strong>Instrucciones:</strong><br>
+      · Tendrás <strong>2 minutos</strong> por pregunta. Si se acaba el tiempo, la pregunta se marca incorrecta.<br>
+      · Solo <strong>un intento</strong> por respuesta; una vez seleccionada no podrás cambiarla.<br>
+      · Recibirás retroalimentación inmediata en cada pregunta.<br>
+      · Al finalizar verás tu nota de <strong>0,0 a 5,0</strong>.
+    </div>
+    <button class="start-btn" onclick="startQuiz()">Iniciar cuestionario →</button>
+  </div>
+
+  <p class="teacher-sig">Docente: Luis Jorge Millán Bustamante</p>
+</div>
+
+<!-- ══════════════════════ QUIZ ══════════════════════ -->
+<div id="quiz">
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="prog-fill"></div></div>
+
+  <div class="q-meta">
+    <div>
+      <div class="q-num" id="q-num-label">Pregunta 1 de 10</div>
+      <div class="q-type-badge" id="q-type-badge"></div>
+    </div>
+    <div class="timer-ring-wrap">
+      <span class="timer-text" id="timer-text">120</span>
+      <svg class="timer-svg" viewBox="0 0 40 40">
+        <circle class="timer-circle-bg" cx="20" cy="20" r="18"/>
+        <circle class="timer-circle-fg" id="timer-ring" cx="20" cy="20" r="18"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="q-card">
+    <div class="q-section-label" id="q-section-label"></div>
+    <div class="q-text" id="q-text"></div>
+    <div class="q-figure" id="q-figure"></div>
+    <div class="options" id="q-options"></div>
+    <div class="feedback-box" id="q-feedback"></div>
+  </div>
+
+  <button class="next-btn" id="next-btn" onclick="nextQuestion()">Siguiente pregunta →</button>
+</div>
+
+<!-- ══════════════════════ RESULTS ══════════════════════ -->
+<div id="results">
+  <div class="result-header">
+    <h1>Resultados finales</h1>
+    <p>Teorema de Pitágoras · Grado 10°</p>
+  </div>
+
+  <div class="score-display">
+    <div class="score-main">
+      <div class="score-note" id="res-nota">—</div>
+      <div class="score-label">Nota / 5,0</div>
+    </div>
+    <div class="score-details" id="res-details"></div>
+  </div>
+
+  <div class="review-list" id="review-list"></div>
+
+  <div class="export-area">
+    <h3>📋 Exportar resultados</h3>
+    <p>Copia los datos en formato CSV para pegarlos en la planilla Excel del docente (columnas: Nombre, Grado, Correctas, Incorrectas, Nota, Porcentaje, Fecha).</p>
+    <button class="copy-btn" onclick="showCSV()">Ver CSV</button>
+    <button class="copy-btn" onclick="copyCSV()">Copiar CSV</button>
+    <textarea id="csv-output" readonly></textarea>
+  </div>
+
+  <p class="footer-sig">Docente: Luis Jorge Millán Bustamante · Matemáticas Grado 10°</p>
+</div>
+
+<script>
+/* ══════════════════════════════════════════
+   QUESTIONS
+══════════════════════════════════════════ */
+// Clave de respuestas correctas por pregunta (índice 0=A, 1=B, 2=C, 3=D):
+// P1→A(0)  P2→D(3)  P3→B(1)  P4→C(2)  P5→D(3)
+// P6→A(0)  P7→C(2)  P8→B(1)  P9→D(3)  P10→C(2)
+// Ternas pitagóricas usadas: (8,15,17) | (13,14,―no rect) | (20,21,29) | (28,45,53) | (9,40,41) | (11,60,61) | (7,24,25)
+
+const QUESTIONS = [
+  /* ── P1: correct = A(0) ── Terna (8, 15, 17) ── */
+  {
+    section: "Verificación de triángulo rectángulo",
+    type: "Comprobación",
+    text: "Un triángulo tiene lados $a = 8$, $b = 15$ y $c = 17$ (donde $c$ es el lado más largo). ¿Es este triángulo rectángulo? Aplica el Teorema de Pitágoras para justificar.",
+    options: [
+      "Sí, porque $8^2 + 15^2 = 17^2$ ✓",
+      "No, porque $8^2 + 15^2 \\neq 17^2$",
+      "Sí, porque los tres lados son impares o pares alternados",
+      "No se puede saber sin medir los ángulos"
+    ],
+    correct: 0,
+    feedback: {
+      ok: "¡Correcto! $8^2 + 15^2 = 64 + 225 = 289 = 17^2$. La igualdad se cumple, por lo tanto el triángulo es rectángulo. $(8, 15, 17)$ es una terna pitagórica primitiva.",
+      fail: "Verifica: $8^2 + 15^2 = 64 + 225 = 289$ y $17^2 = 289$. Como $289 = 289$, el Teorema de Pitágoras se cumple y el triángulo sí es rectángulo."
+    }
+  },
+
+  /* ── P2: correct = D(3) ── Triángulo NO rectángulo (13, 14, 20) ── */
+  {
+    section: "Verificación de triángulo rectángulo",
+    type: "Comprobación",
+    text: "Un arquitecto tiene una triangulación con lados $a = 13$, $b = 14$ y $c = 20$ cm (donde $c$ es el mayor). ¿Confirma el Teorema de Pitágoras que es un triángulo rectángulo?",
+    options: [
+      "Sí, porque $13 + 14 > 20$",
+      "Sí, porque $13^2 + 14^2 = 20^2$",
+      "No se puede verificar sin conocer el ángulo recto",
+      "No, porque $13^2 + 14^2 \\neq 20^2$"
+    ],
+    correct: 3,
+    feedback: {
+      ok: "¡Correcto! $13^2 + 14^2 = 169 + 196 = 365$ y $20^2 = 400$. Como $365 \\neq 400$, el Teorema de Pitágoras no se cumple: el triángulo no es rectángulo.",
+      fail: "Calcula: $13^2 + 14^2 = 169 + 196 = 365$ y $20^2 = 400$. Como $365 \\neq 400$, la condición pitagórica no se cumple: no es un triángulo rectángulo."
+    }
+  },
+
+  /* ── P3: correct = B(1) ── Terna (20, 21, 29) ── */
+  {
+    section: "Cálculo del lado desconocido",
+    type: "Aplicación directa",
+    text: "En un triángulo rectángulo, los catetos miden $a = 20$ y $b = 21$. ¿Cuánto mide la hipotenusa $c$?",
+    figure: `<svg viewBox="0 0 220 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="20,155 155,155 20,20" stroke="#b8860b" stroke-width="2" fill="#fff9e8"/>
+      <rect x="20" y="135" width="20" height="20" stroke="#b8860b" stroke-width="1.5" fill="none"/>
+      <text x="75" y="173" font-family="Georgia,serif" font-style="italic" fill="#1a1209" font-size="13">a = 20</text>
+      <text x="1" y="90" font-family="Georgia,serif" font-style="italic" fill="#1a1209" font-size="13">b = 21</text>
+      <text x="72" y="80" font-family="Georgia,serif" font-style="italic" fill="#8b2500" font-size="13">c = ?</text>
+    </svg>`,
+    options: ["$c = 30$", "$c = 29$", "$c = \\sqrt{41}$", "$c = 31$"],
+    correct: 1,
+    feedback: {
+      ok: "¡Correcto! $c = \\sqrt{20^2 + 21^2} = \\sqrt{400 + 441} = \\sqrt{841} = 29$. La terna $(20, 21, 29)$ es una terna pitagórica primitiva poco conocida.",
+      fail: "Aplica el teorema: $c = \\sqrt{a^2 + b^2} = \\sqrt{400 + 441} = \\sqrt{841} = 29$."
+    }
+  },
+
+  /* ── P4: correct = C(2) ── Terna (28, 45, 53) ── */
+  {
+    section: "Cálculo del lado desconocido",
+    type: "Aplicación directa",
+    text: "En un triángulo rectángulo, la hipotenusa mide $c = 53$ y un cateto mide $a = 28$. ¿Cuánto mide el cateto $b$?",
+    options: ["$b = 25$", "$b = \\sqrt{3697}$", "$b = 45$", "$b = 47$"],
+    correct: 2,
+    feedback: {
+      ok: "¡Correcto! $b = \\sqrt{53^2 - 28^2} = \\sqrt{2809 - 784} = \\sqrt{2025} = 45$. La terna $(28, 45, 53)$ es una terna pitagórica primitiva.",
+      fail: "Despeja $b$: $b = \\sqrt{c^2 - a^2} = \\sqrt{2809 - 784} = \\sqrt{2025} = 45$."
+    }
+  },
+
+  /* ── P5: correct = D(3) ── Terna (9, 40, 41) ── */
+  {
+    section: "Cálculo del lado desconocido",
+    type: "Aplicación directa",
+    text: "En un triángulo rectángulo, los catetos miden $a = 9$ y $b = 40$. ¿Cuál es la medida exacta de la hipotenusa $c$?",
+    options: ["$c = 49$", "$c = \\sqrt{1681 + 1}$", "$c = 39$", "$c = 41$"],
+    correct: 3,
+    feedback: {
+      ok: "¡Correcto! $c = \\sqrt{9^2 + 40^2} = \\sqrt{81 + 1600} = \\sqrt{1681} = 41$. La terna $(9, 40, 41)$ es primitiva: la hipotenusa supera al cateto mayor en solo una unidad.",
+      fail: "Calcula: $c = \\sqrt{81 + 1600} = \\sqrt{1681} = 41$. Recuerda que $41^2 = 1681$."
+    }
+  },
+
+  /* ── P6: correct = A(0) ── Terna (11, 60, 61): escalera ── */
+  {
+    section: "Problemas de aplicación",
+    type: "Aplicación",
+    text: "Una escalera de $61$ dm de longitud apoya su base a $11$ dm de la pared. ¿A qué altura del suelo llega la escalera al muro? (Expresa el resultado en decímetros.)",
+    options: ["$60$ dm", "$50$ dm", "$\\sqrt{3842}$ dm", "$58$ dm"],
+    correct: 0,
+    feedback: {
+      ok: "¡Correcto! $h = \\sqrt{61^2 - 11^2} = \\sqrt{3721 - 121} = \\sqrt{3600} = 60$ dm. La terna $(11, 60, 61)$ es una terna pitagórica primitiva.",
+      fail: "La altura es el cateto: $h = \\sqrt{61^2 - 11^2} = \\sqrt{3600} = 60$ dm."
+    }
+  },
+
+  /* ── P7: correct = C(2) ── Terna (7, 24, 25): parque rectangular ── */
+  {
+    section: "Problemas de aplicación",
+    type: "Aplicación",
+    text: "Un parque rectangular tiene $7$ m de ancho y $24$ m de largo. Un sendero une en línea recta dos esquinas opuestas. ¿Cuánto mide ese sendero diagonal?",
+    options: ["$26$ m", "$31$ m", "$25$ m", "$\\sqrt{527}$ m"],
+    correct: 2,
+    feedback: {
+      ok: "¡Correcto! $d = \\sqrt{7^2 + 24^2} = \\sqrt{49 + 576} = \\sqrt{625} = 25$ m. La terna $(7, 24, 25)$ es una terna pitagórica primitiva muy útil.",
+      fail: "Aplica el teorema con los lados del rectángulo: $d = \\sqrt{49 + 576} = \\sqrt{625} = 25$ m."
+    }
+  },
+
+  /* ── P8: correct = B(1) ── Terna (36, 77, 85) escalada: antena ── */
+  {
+    section: "Problemas de aplicación",
+    type: "Aplicación",
+    text: "Una antena de comunicaciones de $\\frac{77}{2}$ m de altura está sostenida por un cable tensado desde su cima hasta un punto en el suelo a $\\frac{36}{2}$ m de la base. ¿Cuánto mide el cable?",
+    options: ["$\\frac{113}{2}$ m", "$\\frac{85}{2}$ m", "$\\frac{41}{2}$ m", "$\\frac{\\sqrt{7385}}{2}$ m"],
+    correct: 1,
+    feedback: {
+      ok: "¡Correcto! $\\ell = \\sqrt{\\left(\\frac{77}{2}\\right)^2 + \\left(\\frac{36}{2}\\right)^2} = \\sqrt{\\frac{5929 + 1296}{4}} = \\sqrt{\\frac{7225}{4}} = \\frac{85}{2}$ m. La terna base es $(36, 77, 85)$.",
+      fail: "Calcula: $\\ell = \\sqrt{\\left(\\frac{77}{2}\\right)^2+\\left(\\frac{36}{2}\\right)^2} = \\frac{1}{2}\\sqrt{77^2+36^2} = \\frac{1}{2}\\sqrt{7225} = \\frac{85}{2}$ m."
+    }
+  },
+
+  /* ── P9: correct = D(3) ── Terna (33, 56, 65): navegación ── */
+  {
+    section: "Problemas de aplicación",
+    type: "Aplicación",
+    text: "Un dron de rescate parte de la base y vuela $33$ km hacia el oeste y luego $56$ km hacia el sur. ¿A qué distancia en línea recta se encuentra de la base?",
+    options: ["$89$ km", "$\\sqrt{4225}$ km", "$63$ km", "$65$ km"],
+    correct: 3,
+    feedback: {
+      ok: "¡Correcto! $d = \\sqrt{33^2 + 56^2} = \\sqrt{1089 + 3136} = \\sqrt{4225} = 65$ km. La terna $(33, 56, 65)$ es una terna pitagórica primitiva.",
+      fail: "Los desplazamientos forman catetos perpendiculares: $d = \\sqrt{1089 + 3136} = \\sqrt{4225} = 65$ km."
+    }
+  },
+
+  /* ── P10: correct = C(2) ── Terna (16, 63, 65): distancia en plano ── */
+  {
+    section: "Problemas de aplicación",
+    type: "Aplicación",
+    text: "En un plano cartesiano, el punto $P$ tiene coordenadas $(16,\\, 63)$ y el punto $Q$ está en el origen. Calcula la distancia $PQ$.",
+    options: ["$\\sqrt{4230}$", "$79$", "$65$", "$\\sqrt{3970}$"],
+    correct: 2,
+    feedback: {
+      ok: "¡Correcto! $PQ = \\sqrt{16^2 + 63^2} = \\sqrt{256 + 3969} = \\sqrt{4225} = 65$. La terna $(16, 63, 65)$ es una terna pitagórica primitiva.",
+      fail: "Aplica la fórmula de distancia: $PQ = \\sqrt{16^2 + 63^2} = \\sqrt{256 + 3969} = \\sqrt{4225} = 65$."
+    }
+  }
+];
+
+/* ══════════════════════════════════════════
+   STATE
+══════════════════════════════════════════ */
+let studentName = '', studentGrade = '';
+let qIndex = 0;
+let answers = []; // { correct: bool, selected: number, timedOut: bool }
+let timerInterval = null;
+let timeLeft = 120;
+const TOTAL_TIME = 120;
+const CIRCUMFERENCE = 2 * Math.PI * 18; // 113.097...
+
+/* ══════════════════════════════════════════
+   START
+══════════════════════════════════════════ */
+function startQuiz() {
+  const nameEl = document.getElementById('inp-name');
+  const gradeEl = document.getElementById('inp-grade');
+  studentName = nameEl.value.trim();
+  studentGrade = gradeEl.value;
+  if (!studentName) { alert('Por favor ingresa tu nombre completo.'); nameEl.focus(); return; }
+  if (!studentGrade) { alert('Por favor selecciona tu grado.'); gradeEl.focus(); return; }
+  document.getElementById('cover').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  qIndex = 0;
+  answers = [];
+  loadQuestion();
+}
+
+/* ══════════════════════════════════════════
+   LOAD QUESTION
+══════════════════════════════════════════ */
+function loadQuestion() {
+  if (qIndex >= QUESTIONS.length) { showResults(); return; }
+  const q = QUESTIONS[qIndex];
+
+  document.getElementById('prog-fill').style.width = (qIndex / QUESTIONS.length * 100) + '%';
+  document.getElementById('q-num-label').textContent = `Pregunta ${qIndex + 1} de ${QUESTIONS.length}`;
+  document.getElementById('q-type-badge').textContent = q.type;
+  document.getElementById('q-section-label').textContent = q.section;
+  document.getElementById('q-text').innerHTML = q.text;
+  document.getElementById('q-figure').innerHTML = q.figure || '';
+  document.getElementById('q-feedback').style.display = 'none';
+  document.getElementById('next-btn').style.display = 'none';
+
+  // Options
+  const optContainer = document.getElementById('q-options');
+  optContainer.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D'];
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span><span>${opt}</span>`;
+    btn.onclick = () => selectAnswer(i);
+    optContainer.appendChild(btn);
+  });
+
+  // Re-render MathJax
+  if (window.MathJax) MathJax.typesetPromise([document.getElementById('q-text'), optContainer, document.getElementById('q-figure')]);
+
+  startTimer();
+}
+
+/* ══════════════════════════════════════════
+   TIMER
+══════════════════════════════════════════ */
+function startTimer() {
+  clearInterval(timerInterval);
+  timeLeft = TOTAL_TIME;
+  updateTimerUI();
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerUI();
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      timeOut();
+    }
+  }, 1000);
+}
+
+function updateTimerUI() {
+  const pct = timeLeft / TOTAL_TIME;
+  const offset = CIRCUMFERENCE * (1 - pct);
+  const ring = document.getElementById('timer-ring');
+  const txt = document.getElementById('timer-text');
+  ring.style.strokeDashoffset = offset;
+  txt.textContent = timeLeft;
+
+  let color = 'var(--timer-ok)';
+  if (timeLeft <= 30) color = 'var(--timer-warn)';
+  if (timeLeft <= 10) color = 'var(--timer-danger)';
+  ring.style.stroke = color;
+  txt.style.color = color;
+}
+
+function timeOut() {
+  answers.push({ correct: false, selected: -1, timedOut: true });
+  disableOptions();
+  showFeedback(false, true);
+  document.getElementById('next-btn').style.display = 'inline-block';
+}
+
+/* ══════════════════════════════════════════
+   SELECT ANSWER
+══════════════════════════════════════════ */
+function selectAnswer(idx) {
+  clearInterval(timerInterval);
+  const q = QUESTIONS[qIndex];
+  const isCorrect = idx === q.correct;
+  answers.push({ correct: isCorrect, selected: idx, timedOut: false });
+  disableOptions();
+  markOptions(idx, q.correct);
+  showFeedback(isCorrect, false);
+  document.getElementById('next-btn').style.display = 'inline-block';
+}
+
+function disableOptions() {
+  document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+}
+
+function markOptions(selected, correct) {
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach((btn, i) => {
+    if (i === correct) {
+      if (i === selected) btn.classList.add('correct');
+      else btn.classList.add('missed');
+    } else if (i === selected) {
+      btn.classList.add('wrong');
+    }
+  });
+}
+
+function showFeedback(isCorrect, timedOut) {
+  const fb = document.getElementById('q-feedback');
+  const q = QUESTIONS[qIndex];
+  if (timedOut) {
+    fb.className = 'feedback-box wrong';
+    fb.innerHTML = `⏱ <strong>Tiempo agotado.</strong> La respuesta correcta era la opción indicada en verde. ${q.feedback.fail}`;
+  } else if (isCorrect) {
+    fb.className = 'feedback-box correct';
+    fb.innerHTML = `✓ <strong>¡Excelente!</strong> ${q.feedback.ok}`;
+  } else {
+    fb.className = 'feedback-box wrong';
+    fb.innerHTML = `✗ <strong>Incorrecto.</strong> ${q.feedback.fail}`;
+  }
+  fb.style.display = 'block';
+  if (window.MathJax) MathJax.typesetPromise([fb]);
+  // Also show missed answer if timed out
+  if (timedOut) {
+    const btns = document.querySelectorAll('.option-btn');
+    btns.forEach((btn, i) => {
+      if (i === QUESTIONS[qIndex].correct) btn.classList.add('missed');
+    });
+  }
+}
+
+/* ══════════════════════════════════════════
+   NEXT QUESTION
+══════════════════════════════════════════ */
+function nextQuestion() {
+  qIndex++;
+  loadQuestion();
+}
+
+/* ══════════════════════════════════════════
+   RESULTS
+══════════════════════════════════════════ */
+function showResults() {
+  document.getElementById('quiz').style.display = 'none';
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('prog-fill').style.width = '100%';
+
+  const total = QUESTIONS.length;
+  const correct = answers.filter(a => a.correct).length;
+  const wrong = total - correct;
+  const pct = Math.round((correct / total) * 100);
+  const nota = parseFloat(((correct / total) * 5).toFixed(1));
+
+  const notaEl = document.getElementById('res-nota');
+  notaEl.textContent = nota.toFixed(1).replace('.', ',');
+  notaEl.className = 'score-note ' + (nota >= 3.0 ? 'approved' : 'failed');
+
+  document.getElementById('res-details').innerHTML =
+    `<strong>Estudiante:</strong> ${studentName}<br>
+     <strong>Grado:</strong> ${studentGrade}<br>
+     <strong>Correctas:</strong> ${correct} / ${total}<br>
+     <strong>Incorrectas:</strong> ${wrong} / ${total}<br>
+     <strong>Porcentaje:</strong> ${pct}%<br>
+     <strong>Estado:</strong> ${nota >= 3.0 ? '✅ Aprobado' : '❌ Reprobado'}`;
+
+  // Review list
+  const rl = document.getElementById('review-list');
+  rl.innerHTML = '';
+  QUESTIONS.forEach((q, i) => {
+    const a = answers[i] || { correct: false, timedOut: true };
+    const icon = a.correct ? '✅' : '❌';
+    const shortQ = q.text.replace(/\$[^$]+\$/g, '[expr]').substring(0, 80) + '...';
+    rl.innerHTML += `<div class="review-item">
+      <span class="review-icon">${icon}</span>
+      <div class="review-text">
+        <strong>Pregunta ${i+1}:</strong> ${q.section}<br>
+        <span>${shortQ}</span>
+        ${a.timedOut ? '<em> — Tiempo agotado</em>' : ''}
+      </div>
+    </div>`;
+  });
+
+  // CSV
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('es-CO') + ' ' + now.toLocaleTimeString('es-CO');
+  window._csvData = `Nombre,Grado,Correctas,Incorrectas,Nota,Porcentaje,Fecha\n"${studentName}","${studentGrade}",${correct},${wrong},${nota.toFixed(1)},${pct}%,"${dateStr}"`;
+
+  // Scroll to top
+  window.scrollTo(0, 0);
+}
+
+function showCSV() {
+  const ta = document.getElementById('csv-output');
+  ta.style.display = 'block';
+  ta.value = window._csvData;
+}
+
+function copyCSV() {
+  if (!window._csvData) return;
+  navigator.clipboard.writeText(window._csvData).then(() => {
+    alert('¡Datos CSV copiados al portapapeles! Pégalos en la planilla Excel.');
+  }).catch(() => {
+    showCSV();
+    alert('No se pudo copiar automáticamente. Selecciona el texto y cópialo manualmente.');
+  });
+}
+</script>
+</body>
+</html>
